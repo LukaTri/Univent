@@ -1,0 +1,43 @@
+{#
+    This template inherits from query.html, replacing its result block
+    with the result block below.
+#}
+
+{% extends "query.html" %}
+
+{% block result %}
+<p>
+Your query was: {{ query }}<br>
+
+{#
+    |length is a Jinja filter which returns the number of items in a
+    container.  The following if block renders the result's field
+    names.
+
+    See Jinja's documentation for other potentially useful filters.
+#}
+
+It returned {{ results|length }} records with these fields:<br>
+{% if results|length > 0 %}
+    |&nbsp;
+    {% for col in results[0].keys() %}
+        {{ col }} &nbsp;|&nbsp;
+    {% endfor %}
+{% else %}
+    No records; no fields
+{% endif %}
+<br>
+<p>
+
+{#
+    Render the fields of each record.
+#}
+
+{% for row in results %}
+    |&nbsp;
+    {% for col in row.values() %}
+        {{ col }}&nbsp;|&nbsp;
+    {% endfor %}
+    <br>
+{% endfor %}
+{% endblock %}

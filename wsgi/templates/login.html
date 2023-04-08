@@ -1,0 +1,24 @@
+<html>
+<head>
+<title>Demo Database Access Tool</title>
+</head>
+<body>
+<h1>Demo Database Access Tool</h1>
+<form action="{{ url_for('login') }}" method="POST">
+    <table id="login">
+        <tr>
+            <td>User: </td>
+            <td><input type="text" name="user" autofocus></td>
+        </tr>
+        <tr>
+            <td>Password: </td>
+            <td><input type="password" name="passwd"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="submit" value="Login"></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>
