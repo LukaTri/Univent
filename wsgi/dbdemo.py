@@ -55,9 +55,9 @@ def afterReq(response):
 
 def getDb():
     if 'db' not in g:
-        g.db = connect(dbname=app.config['DBDEMO_DB'],
-                       user=app.config['DBDEMO_USER'],
-                       password=app.config['DBDEMO_PW'],
+        g.db = connect(dbname=app.config['UNIVENT_DB'],
+                       user=app.config['UNIVENT_USER'],
+                       password=app.config['UNIVENT_PW'],
                        cursor_factory=DictCursor)
     return g.db
 

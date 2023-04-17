@@ -6,4 +6,5 @@ FLASK_APP = pageCount.py
 # Running applications must have their own port.  Sharing isn't allowed.
 FLASK_RUN_PORT = 4200
 
-FLASK_DEBUG = true
+FLASK_DEBUG = True
+FLASK_TESTING = True
