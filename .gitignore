@@ -8,7 +8,6 @@ wsgi/templates/logout.html
 wsgi/templates/pageCount.html
 wsgi/templates/pageCountReset.html
 wsgi/__pycache__
+wsgi/config.py
 
 .vscode
-
-
