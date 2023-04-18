@@ -21,6 +21,7 @@ CREATE TABLE Users(
     CONSTRAINT Users_phonenumber_cc CHECK (phone_number NOT LIKE '%[^0-9]%'),
     CONSTRAINT Users_clubname_fk FOREIGN KEY (club_name)
                                  REFERENCES Club (club_name)
+                                 ON DELETE CASCADE
 );
 
 CREATE TABLE Event(
@@ -36,7 +37,8 @@ CREATE TABLE Event(
 
     CONSTRAINT Event_eventname_pk PRIMARY KEY (event_name),
     CONSTRAINT Event_clubname_fk FOREIGN KEY (club_name) 
-                                 REFERENCES Club (club_name),
+                                 REFERENCES Club (club_name)
+                                 ON DELETE CASCADE,
     CONSTRAINT Event_cost_cc CHECK (cost >= 0),
     CONSTRAINT Event_estattd_cc CHECK (est_attendance >= 0)
     -- Add constraints for date and time later once I understand what to do.
@@ -49,9 +51,11 @@ CREATE TABLE Registers(
     event_res_form  varchar(42) NOT NULL, --Research for better desc.
 
     CONSTRAINT Registers_eventname_fk FOREIGN KEY (event_name)
-                                      REFERENCES Event (event_name),
+                                      REFERENCES Event (event_name)
+                                      ON DELETE CASCADE,
     CONSTRAINT Registers_userid_fk FOREIGN KEY (user_id)
                                    REFERENCES Users (user_id)
+                                   ON DELETE CASCADE
 );
 
 
@@ -70,7 +74,9 @@ CREATE TABLE Approval(
     user_id         varchar(42) NOT NULL,
 
     CONSTRAINT Approval_eventname_fk FOREIGN KEY (event_name)
-                                     REFERENCES Event (event_name),
+                                     REFERENCES Event (event_name)
+                                     ON DELETE CASCADE,
     CONSTRAINT Approval_userid_fk FOREIGN KEY (user_id)
                                   REFERENCES Ose (user_id)
+                                  ON DELETE CASCADE
 );
