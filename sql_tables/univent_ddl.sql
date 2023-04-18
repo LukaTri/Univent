@@ -29,7 +29,7 @@ CREATE TABLE Event(
     club_name       varchar(42) NOT NULL,
     time            varchar(42) NOT NULL, --Research to get time format
     event_date      varchar(42) NOT NULL, --Research to get date format
-    cost            numeric(4,2) NOT NULL,
+    cost            numeric(6,2) NOT NULL,
     est_attendance  numeric(3,0) NOT NULL,
     event_desc      varchar(500) NOT NULL, --Research for long entires
     primary_loc     varchar(100) NOT NULL,
@@ -73,6 +73,7 @@ CREATE TABLE Approval(
     event_name      varchar(42) NOT NULL,
     user_id         varchar(42) NOT NULL,
 
+    CONSTRAINT Approval_pk PRIMARY KEY (event_name, user_id),
     CONSTRAINT Approval_eventname_fk FOREIGN KEY (event_name)
                                      REFERENCES Event (event_name)
                                      ON DELETE CASCADE,
