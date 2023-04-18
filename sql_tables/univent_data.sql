@@ -61,6 +61,18 @@ INSERT INTO Event VALUES(
     'ath'
 );
 
+INSERT INTO Event VALUES(
+    'Culture Day',
+    'nomad',
+    '25:00',
+    'June 26',
+    '9999.99',
+    '999',
+    'this event is to celebrate culture.',
+    'Ath',
+    'Mary Fisher'
+);
+
 --Insert Registers Fourth:
 INSERT INTO Registers VALUES(
     --event_name (fk)
