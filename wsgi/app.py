@@ -35,23 +35,12 @@ def afterReq(response):
 
 @app.route('/', methods=['POST', 'GET'])
 def login():
-    # Cursor will close after the 'with' statement
-    with getDb().cursor() as cur:
-        cur.execute('SELECT * FROM Users;')
-        list_users = cur.fetchall()
-        print(list_users)
-        getDb().commit()
-
-    return render_template('login.html')
-
-@app.route('/test/', methods=['POST', 'GET'])
-def test():
-
+    
     if request.method == 'GET':
         if session['loggedIn']:
             return redirect(url_for('success', user=session['user']))
         else:
-            return render_template('test.html')
+            return render_template('login.html')
     else:
         # Get the username and password input from HTML
         user = request.form['user']
@@ -69,12 +58,11 @@ def test():
             session['loggedIn'] = True
             session['user'] = user
             session.modified = True
-            # return render_template('success.html', user=session['user'])
             return redirect(url_for('success', user=session['user']))
         else:
-            return render_template('test.html')
+            return render_template('login.html')
 
 
-@app.route('/success/')
-def success():
-    return render_template('success.html')
+@app.route('/success/<user>')
+def success(user=None):
+    return render_template('success.html', user=session['user'])
