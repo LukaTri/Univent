@@ -10,4 +10,5 @@ wsgi/templates/pageCountReset.html
 wsgi/__pycache__
 wsgi/config.py
 
+wsgi/templates/test.html
 .vscode

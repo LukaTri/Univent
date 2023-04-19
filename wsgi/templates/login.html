@@ -29,7 +29,7 @@
           />
         </svg>
       </div>
-      <form action="" class="log-in" autocomplete="off">
+      <form action="{{ url_for('login') }}" method="POST" class="log-in" autocomplete="off">
         <h4><span>Univent</span></h4>
         <p>
           Get ready to Uni-vent like a pro: The ultimate event management
@@ -37,13 +37,11 @@
         </p>
         <div class="floating-label">
           <input
-            placeholder="Email"
-            type="email"
-            name="email"
-            id="email"
+            placeholder="User ID"
+            name="user"
             autocomplete="off"
           />
-          <label for="email">Email:</label>
+          <label for="user">User ID:</label>
           <div class="icon">
             <?xml version="1.0" encoding="UTF-8"?>
             <svg
@@ -71,8 +69,7 @@
           <input
             placeholder="Password"
             type="password"
-            name="password"
-            id="password"
+            name="passwd"
             autocomplete="off"
           />
           <label for="password">Password:</label>
@@ -106,7 +103,8 @@
             </svg>
           </div>
         </div>
-        <button type="submit" onClick="return false;">Log in</button>
+        <!-- <button type="submit" onClick="return false;">Log in</button> -->
+        <button type="submit" value="Login">Log in</button>"
       </form>
     </div>
   </body>
