@@ -35,13 +35,13 @@ def afterReq(response):
 
 @app.route('/', methods=['POST', 'GET'])
 def login():
-    
+    print(session)
     if request.method == 'GET':
         if session['loggedIn']:
             return redirect(url_for('success', user=session['user']))
         else:
             return render_template('login.html')
-    else:
+    else: 
         # Get the username and password input from HTML
         user = request.form['user']
         password = request.form['passwd']
@@ -63,6 +63,19 @@ def login():
             return render_template('login.html')
 
 
-@app.route('/success/<user>')
+@app.route('/success/<user>/')
 def success(user=None):
     return render_template('success.html', user=session['user'])
+
+@app.route('/logout/')
+def logout():
+    session.pop("user", None)
+    session['loggedIn'] = False
+    session.modified = True
+    print(session)
+    return render_template('logout.html')
+
+
+@app.route('/event-registration/', methods=['POST', 'GET'])
+def registration():
+    return render_template('eventReg.html')

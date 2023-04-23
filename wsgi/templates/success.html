@@ -10,4 +10,7 @@
     <h1>Success!</h1>
     Hello {{ user }}!
   </body>
+  <form action="{{ url_for('logout') }}">
+    <input type="submit" value="Log Out">
+  </form>
 </html>
