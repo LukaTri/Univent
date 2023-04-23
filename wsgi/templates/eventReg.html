@@ -137,7 +137,7 @@
   
   </style>
   <body>
-    <form id="regForm" action="/action_page.php">
+    <form id="regForm" action="{{ url_for('registration')}}" method="POST">
       <h1>Space Reservation Form</h1>
      
       <p>Deadline: 14 Business Days prior to the event</p>
@@ -162,13 +162,13 @@
               <input placeholder="First Location Preference" oninput="this.className = ''" name="firstLocationpreference" style="margin-bottom: 10px;" />
             </div>
             <div style="flex: 1; margin-left: 10px;">
-              <input placeholder="Second Location" oninput="this.className = ''" name="secondlocation" style="margin-bottom: 10px;" />
+              <input placeholder="Second Location Preference" oninput="this.className = ''" name="secondlocation" style="margin-bottom: 10px;" />
             </div>
           </div>
           <div style="display: flex; flex-direction: row; margin-bottom: 0px;">
             <div style="display: flex; flex-direction: row; margin-bottom: 10px; flex: 1;">
                 <div style="flex: 1; margin-right: 20px;">
-                    <input placeholder="Event Date" oninput="this.className = ''" name="eventdate" style="margin-bottom: 10px; width: 100%;" />
+                    <input placeholder="Event Date" oninput="this.className = ''" name="eventdate" style="margin-bottom: 10px; width: 100%;" type="date"/>
                 </div>
                 <div style="flex: 1; margin-left: 0;">
                     <input placeholder="Day of Week" oninput="this.className = ''" name="dayofweek" style="margin-bottom: 10px; width: 100%;" />
@@ -176,10 +176,10 @@
             </div>
             <div style="display: flex; flex-direction: row; margin-bottom: 10px; flex: 1; margin-left: 20px;">
                 <div style="flex: 1; margin-right: 20px;">
-                    <input placeholder="Start Time" oninput="this.className = ''" name="starttime" style="margin-bottom: 10px; width: 100%;" />
+                    <input placeholder="Start Time" oninput="this.className = ''" name="starttime" style="margin-bottom: 10px; width: 100%;" type="time"/>
                 </div>
                 <div style="flex: 1;">
-                    <input placeholder="End Time" oninput="this.className = ''" name="endtime" style="margin-bottom: 10px; width: 100%;" />
+                    <input placeholder="End Time" oninput="this.className = ''" name="endtime" style="margin-bottom: 10px; width: 100%;" type="time"/>
                 </div>
             </div>
         </div>
@@ -235,8 +235,11 @@
                   vetting or finding an organization?
                 </td>
                 <td>
-                  Lindsay Johnson ljohnson@goucher.edu Cass Freedland
-                  cass.freedland@goucher.edu
+                  <a href="mailto:ljohnson@goucher.edu">Lindsay Johnson</a>
+                  and
+                  <a href="mailto:cass.freedland@goucher.edu">Cass Freedland</a>
+                  <!-- Lindsay Johnson ljohnson@goucher.edu Cass Freedland -->
+                  <!-- cass.freedland@goucher.edu -->
                 </td>
               </tr>
               <tr>
@@ -244,7 +247,7 @@
                   <input type="checkbox" id="marketing" name="marketing" value="marketing" />
                 </td>
                 <td>Need assistance with marketing and/or digital sign?</td>
-                <td>Send email to OSE interns at oseinterns@goucher.edu</td>
+                <td>Send email to OSE interns at <a href="mailto:oseinterns@goucher.edu">oseinterns@goucher.edu</a></td>
               </tr>
             </table>
           </div>
