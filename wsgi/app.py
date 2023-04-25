@@ -84,7 +84,7 @@ def success(user=None):
 def logout():
     session.clear()
     session.modified = True
-    print(session)
+    # print(session)
     return render_template('logout.html')
 
 

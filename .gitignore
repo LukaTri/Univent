@@ -4,7 +4,6 @@ wsgi/pageCount.py
 wsgi/templates/form.html
 wsgi/templates/query.html
 wsgi/templates/result.html
-wsgi/templates/logout.html
 wsgi/templates/pageCount.html
 wsgi/templates/pageCountReset.html
 wsgi/__pycache__
