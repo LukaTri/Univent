@@ -13,4 +13,8 @@
   <form action="{{ url_for('logout') }}">
     <input type="submit" value="Log Out">
   </form>
+
+  <form action="{{ url_for('registration', user=session['user']) }}">
+    <input type="submit" value="Register an Event">
+  </form>
 </html>

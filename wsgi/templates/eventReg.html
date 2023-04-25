@@ -137,7 +137,7 @@
   
   </style>
   <body>
-    <form id="regForm" action="{{ url_for('registration')}}" method="POST">
+    <form id="regForm" action="{{ url_for('registration', user=session['user']) }}" method="POST" autocomplete="off">
       <h1>Space Reservation Form</h1>
      
       <p>Deadline: 14 Business Days prior to the event</p>
@@ -148,21 +148,21 @@
         
         <div style="display: flex; flex-direction: row; margin-bottom: 10px;">
           <div style="flex: 1; margin-right: 10px;">
-            <input placeholder="Event Name" oninput="this.className = ''" name="eventname" style="margin-bottom: 10px;" />
+            <input placeholder="Event Name" oninput="this.className = ''" name="eventname" style="margin-bottom: 10px;" type="text"/>
           </div>
           <div style="flex: 1; margin-left: 10px;">
-            <input placeholder="Estimated Attendance" oninput="this.className = ''" name="estimatedattendance" style="margin-bottom: 10px;" />
+            <input placeholder="Estimated Attendance" oninput="this.className = ''" name="estimatedattendance" style="margin-bottom: 10px;" type="number" min="1" max="999"/>
           </div>
         </div>
         <div style="flex: 1; margin-right: 0px;">
-            <input placeholder="Event Description" oninput="this.className = ''" name="eventdescription" style="margin-bottom: 20px;" />
+            <input placeholder="Event Description (500 Characters)" oninput="this.className = ''" name="eventdescription" style="margin-bottom: 20px;" type="text" maxlength="500"/>
           </div>
           <div style="display: flex; flex-direction: row; margin-bottom: 10px;">
             <div style="flex: 1; margin-right: 10px;">
-              <input placeholder="First Location Preference" oninput="this.className = ''" name="firstLocationpreference" style="margin-bottom: 10px;" />
+              <input placeholder="First Location Preference" oninput="this.className = ''" name="firstLocationPreference" style="margin-bottom: 10px;" />
             </div>
             <div style="flex: 1; margin-left: 10px;">
-              <input placeholder="Second Location Preference" oninput="this.className = ''" name="secondlocation" style="margin-bottom: 10px;" />
+              <input placeholder="Second Location Preference" oninput="this.className = ''" name="secondLocationPreference" style="margin-bottom: 10px;" />
             </div>
           </div>
           <div style="display: flex; flex-direction: row; margin-bottom: 0px;">
