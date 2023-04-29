@@ -25,7 +25,13 @@ def sqlQuery(query: str, kwargs:dict):
         cur.execute(query, kwargs)
         result = cur.fetchone()
         getDb().commit()
+    return result
 
+def multiSqlQuery(query: str, kwargs:dict):
+    with getDb().cursor() as cur:
+        cur.execute(query, kwargs)
+        result = cur.fetchall()
+        getDb().commit()
     return result
 
 
@@ -56,61 +62,121 @@ def login():
         password = request.form['passwd']
         print(f'User Entered: {user}\nPassword Entered: {password}')
 
-
-
-        # with getDb().cursor() as cur:
-        query = 'SELECT first_name, password FROM Users WHERE email=%(usr)s;'
+        query = 'SELECT first_name, password, user_id FROM Users WHERE email=%(usr)s;'
         vars = {'usr' : user}
-            # cur.execute(query, vars)
-            # result = cur.fetchone()
         result = sqlQuery(query, vars)
         print(result)
-            # getDb().commit()
         
         if result != None and password == result['password']:
             session['loggedIn'] = True
-            session['user'] = result[0] 
+            session['user'] = result[0]
+            session['usr_id'] = result[2]
             session.modified = True
             return redirect(url_for('success', user=session['user']))
         else:
             return render_template('login.html')
 
 
-@app.route('/success/<user>/')
+@app.route('/success/<user>/', methods=['GET', 'POST'])
 def success(user=None):
-    return render_template('success.html', user=session['user'])
+    events = []
+
+    user_kwargs = {
+        "usr_id":session['usr_id']
+    }
+    club_query = "SELECT club_name FROM Members m, Users s\
+        WHERE %(usr_id)s = m.user_id;"
+        # WHERE %(usr_id)s = %(usr_id)s;"
+    
+    club_result = sqlQuery(club_query, user_kwargs)
+    session['club_name'] = club_result[0]
+
+    kwargs = {
+        "clubname" : session['club_name']
+    }
+    query = "SELECT event_name, event_date, primary_loc FROM\
+        Event WHERE club_name = %(clubname)s;"
+    result = multiSqlQuery(query, kwargs)
+
+    if not result:
+        result
+    else:
+        for i in result:
+            print(i)
+            print(type(i))
+            events.append(i)
+
+    return render_template('success.html', user=session['user'], events=events)
 
 @app.route('/logout/')
 def logout():
     session.clear()
     session.modified = True
-    # print(session)
     return render_template('logout.html')
 
 
 @app.route('/event-registration/<user>/', methods=['POST', 'GET'])
 def registration(user=None):
 
-    if request.method == 'POST':
-        event_name = request.form['eventname']
-        est_attd = request.form['estimatedattendance']
-        event_desc = request.form['eventdescription']
-        first_loc_pref = request.form['firstLocationPreference']
-        second_loc_pref= request.form['secondLocationPreference']
-        date = request.form['eventdate']
-        start_time = request.form['starttime']
-        end_time = request.form['endtime']
-        session_user = session['user']
+    user_kwargs = {
+        "usr_id":session['usr_id']
+    }
+    club_query = "SELECT club_name FROM Members m, Users s\
+        WHERE %(usr_id)s = m.user_id;"
+        # WHERE %(usr_id)s = %(usr_id)s;"
+    
+    club_result = sqlQuery(club_query, user_kwargs)
+    session['club_name'] = club_result[0]
 
-        print(f'Event Name: {event_name}')
-        print(f'Estimated Attendance: {est_attd}')
-        print(f'Event Description: {event_desc}')
-        print(f'Primary Location: {first_loc_pref}')
-        print(f'Secondary Location: {second_loc_pref}')
-        print(f'Date entered: {date}')
-        print(f'Start time entered: {start_time}')
-        print(f'End time entered: {end_time}')
-        print(f'The user in question: {session_user}')
+    if request.method == 'POST':
+        kwargs= {
+        "eventname" : request.form['eventname'],
+        "estimatedattendance" : request.form['estimatedattendance'],
+        "eventdescription" : request.form['eventdescription'],
+        "firstLocationPreference" : request.form['firstLocationPreference'],
+        "secondLocationPreference" : request.form['secondLocationPreference'],
+        "eventdate" : request.form['eventdate'],
+        "starttime" : request.form['starttime'],
+        "endtime" : request.form['endtime'],
+        "clubname" : session['club_name'],
+        }
+
+        # eventname = request.form['eventname']
+        # estimatedattendance = request.form['estimatedattendance']
+        # eventdescription = request.form['eventdescription']
+        # firstLocationPreference = request.form['firstLocationPreference']
+        # secondLocationPreference = request.form['secondLocationPreference']
+        # eventdate = request.form['eventdate']
+        # starttime = request.form['starttime']
+        # endtime = request.form['endtime']
+        # user = session['user']
+        # print(f'Event Name: {eventname}')
+        # print(f'Estimated Attendance: {estimatedattendance}')
+        # print(f'Event Description: {eventdescription}')
+        # print(f'Primary Location: {firstLocationPreference}')
+        # print(f'Secondary Location: {secondLocationPreference}')
+        # print(f'Date entered: {eventdate}')
+        # print(f'Start time entered: {starttime}')
+        # print(f'End time entered: {endtime}')
+        # print(f'The user in question: {user}')
+
+        query = "INSERT INTO Event (\
+            event_name, club_name, event_time,\
+            event_date, est_attendance, event_desc,\
+            primary_loc, secondary_loc)\
+            VALUES(\
+            %(eventname)s,\
+            %(clubname)s,\
+            %(starttime)s,\
+            %(eventdate)s,\
+            %(estimatedattendance)s,\
+            %(eventdescription)s,\
+            %(firstLocationPreference)s,\
+            %(secondLocationPreference)s\
+        ) RETURNING event_name, event_date, primary_loc;"
+        results = sqlQuery(query, kwargs)
+        print(results)
+        return redirect(url_for('success', user=session['user']))
 
     return render_template('eventReg.html')
 

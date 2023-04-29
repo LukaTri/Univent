@@ -1,4 +1,5 @@
 --Insert users into the database. This application works as if you cannot
+--create your own profile. This is done theoretion works as if you cannot
 --create your own profile. This is done theoretically by Goucher IT
 
 -- Delete all prior entries
@@ -20,93 +21,101 @@ INSERT INTO Club VALUES(
 );
 
 --Insert Club Members second:
-INSERT INTO Users (first_name, last_name, email, phone_number, password, title, user_type) VALUES (
+INSERT INTO Users (first_name, last_name, email, password, user_type) VALUES (
     --user_id
     --'001',
     -- club_name (fk)
     --'nomad',
     -- first_name
-    'john',
+    'K',
     --last_name
-    'doe',
+    'Hirageto',
     -- user_email
     'user@email.com',
     -- user pn
-    '2017234808',
+    --'2017234808',
     -- user_pwd
     'password',
     -- user_title
-    'president',
+    --'president',
     -- user_type
-    '0'
+    '1'
 );
-INSERT INTO Users (first_name, last_name, email, phone_number, password, title, user_type) VALUES (
+
+INSERT INTO Members (user_id, title, club_name, phone_number) VALUES(
+    '1',
+    'President',
+    'nomad',
+    '2017234808'
+);
+
+INSERT INTO Users (first_name, last_name, email, password, user_type) VALUES (
     --user_id
     --'003',
     -- club_name (fk)
     --'nomad',
     -- first_name
-    'john',
+    'Luka',
     --last_name
-    'doe',
+    'Trikha',
     -- user_email
-    'testuser@email.com',
+    'lutri001@goucher.edu',
     -- user pn
-    '2017234808',
+    --'2017234808',
     -- user_pwd
     'password',
     -- user_title
-    'president',
+    --'president',
     -- user_type
     '0'
 );
 
+-- --Insert Event third:
+-- INSERT INTO Event VALUES(
+--     --event_name
+--     'Culture Day',
+--     --club_name (fk)
+--     'nomad',
+--     --time
+--     '12:00',
+--     --date
+--     '2023/04/01',
+--     --cost
+--     '10',
+--     --est_attendance
+--     '10',
+--     --event_description
+--     'the event is cool',
+--     --primary_location
+--     'heubeck hall',
+--     --secondary_location
+--     'ath'
+-- );
 
---Insert Event third:
-INSERT INTO Event VALUES(
-    --event_name
-    'Culture Day',
-    --club_name (fk)
-    'nomad',
-    --time
-    '12:00',
-    --date
-    '2023/04/01',
-    --cost
-    '10',
-    --est_attendance
-    '10',
-    --event_description
-    'the event is cool',
-    --primary_location
-    'heubeck hall',
-    --secondary_location
-    'ath'
-);
+-- INSERT INTO Event VALUES(
+--     'Career Day',
+--     'nomad',
+--     '24:00',
+--     '2023/06/26',
+--     '9999.99',
+--     '999',
+--     'this event is to celebrate culture.',
+--     'Ath',
+--     'Mary Fisher'
+-- );
 
-INSERT INTO Event VALUES(
-    'Career Day',
-    'nomad',
-    '24:00',
-    '2023/06/26',
-    '9999.99',
-    '999',
-    'this event is to celebrate culture.',
-    'Ath',
-    'Mary Fisher'
-);
 
 --Insert Registers Fourth:
-INSERT INTO Registers VALUES(
-    --event_name (fk)
-    'Culture Day',
-    --user_id (fk)
-    '001',
-    --space_reg_form
-    'space form',
-    --event_reg_form
-    'event form'
-);
+-- INSERT INTO Registers VALUES(
+--     --event_name (fk)
+--     'Culture Day',
+--     --user_id (fk)
+--     '15',
+--     --space_reg_form
+--     'space form',
+--     --event_reg_form
+--     'event form'
+-- );
 
 --Insert OSE Fifth:
 INSERT INTO Ose VALUES(
@@ -123,9 +132,9 @@ INSERT INTO Ose VALUES(
 );
 
 --Insert Approval Sixth:
-INSERT INTO Approval VALUES(
-    --event_name (fk)
-    'Culture Day',
-    --user_id (fk)
-    '002'
-);
+-- INSERT INTO Approval VALUES(
+--     --event_name (fk)
+--     'Culture Day',
+--     --user_id (fk)
+--     '002'
+-- );
