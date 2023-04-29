@@ -9,7 +9,6 @@
   <body>
     <h1>Success!</h1>
     Hello {{ user }}!
-  </body>
   <form action="{{ url_for('logout') }}">
     <input type="submit" value="Log Out">
   </form>
@@ -17,4 +16,18 @@
   <form action="{{ url_for('registration', user=session['user']) }}">
     <input type="submit" value="Register an Event">
   </form>
+  <p> 
+    Upcoming Events:
+  </p>
+  {% if not events %}
+  <p>You have no upcoming events.</p>
+  {% else %}
+  <p> {{ events[0] }}</p>
+  <br>
+  <p> {{ events[1] }}</p>
+  <br>
+  <p> {{ events[2] }}</p>
+
+  {% endif %}
+  </body>
 </html>
