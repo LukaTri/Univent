@@ -19,7 +19,7 @@ CREATE TABLE Users(
     -- phone_number    char(10),
     password        varchar(42) NOT NULL,
     -- title           varchar(42) NOT NULL,
-    user_type       numeric(1,0) NOT NULL,
+    user_type       INTEGER NOT NULL,
 
     CONSTRAINT Users_userid_pk PRIMARY KEY (user_id)
     --CONSTRAINT Users_phonenumber_cc CHECK (phone_number NOT LIKE '%[^0-9]%'),
