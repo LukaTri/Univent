@@ -13,21 +13,25 @@
     <input type="submit" value="Log Out">
   </form>
 
+  {% if user_type == 1 %}
   <form action="{{ url_for('registration', user=session['user']) }}">
     <input type="submit" value="Register an Event">
   </form>
+  {% else %}
+  <p>Not a member of any club, therefore cannot register for any events.</p>
+  {% endif %}
   <p> 
     Upcoming Events:
   </p>
+
   {% if not events %}
   <p>You have no upcoming events.</p>
   {% else %}
-  <p> {{ events[0] }}</p>
-  <br>
-  <p> {{ events[1] }}</p>
-  <br>
-  <p> {{ events[2] }}</p>
-
+  {% for i in events %}
+  <p> {{ i }} </p>
+  {% endfor %}
   {% endif %}
+
+
   </body>
 </html>
