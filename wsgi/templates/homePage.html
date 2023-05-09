@@ -3,11 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
     <title>Event List</title>
+
     <style>
       * {
         box-sizing: border-box;
         margin: 0;
+        background-color: #f7f9fd;
 
         padding: 0;
       }
@@ -23,6 +29,15 @@
         padding-left: 25px;
         padding-top: 20pt;
       }
+      .right-container {
+        position: fixed;
+        top: 40px;
+        right: 0;
+        width: 50%;
+        height: 50vh;
+        padding-left: 20px;
+        padding-top: 20px;
+      }
 
       .event-list {
         position: fixed;
@@ -37,14 +52,12 @@
       .ongoingTitle {
         color: indigo;
         font-weight: 600;
-        font-size: 25px;
+        font-size: 20px;
       }
 
       .event-list table {
         border-collapse: collapse;
         width: 100%;
-        color: indigo;
-        background-color: indigo;
       }
 
       .event-list th,
@@ -72,7 +85,9 @@
       }
 
       .event-list th {
-        background-color: #f5f5f5;
+        background-color: #04aa6d;
+        color: white;
+        border-radius: 5px;
       }
 
       .event-list tr:hover {
@@ -81,19 +96,20 @@
       }
 
       .event-details {
-        position: absolute;
-        top: 40px;
+        position: fixed;
+        top: 0px;
         left: 0;
-        width: 100%;
-        height: calc(100% - 40px);
+        width: 50%;
+        height: 100%;
         display: none;
-        background-color: #fff;
+        background-color: #f7f9fd;
         padding: 40px;
         box-sizing: border-box;
       }
 
       .event-details h2 {
-        margin-bottom: 20px;
+        margin-bottom: 0px;
+        width: 200;
       }
 
       .event-details p {
@@ -126,7 +142,7 @@
         padding-left: 25px;
         color: indigo;
         font-weight: 600;
-        font-size: 25px;
+        font-size: 20px;
       }
 
       .past-event-list th,
@@ -137,7 +153,9 @@
       }
 
       .past-event-list th {
-        background-color: #f5f5f5;
+        background-color: #04aa6d;
+        color: white;
+        border-radius: 5px;
       }
 
       .past-event-list tbody {
@@ -157,6 +175,296 @@
         background-color: #f2f2f2;
         cursor: pointer;
       }
+      /* .register-event-container {
+        background-color: #02cb7b;
+        width: 25%;
+        margin-top: 2px;
+        height: 12%;
+        border-radius: 13px;
+        margin: 0;
+        padding: 12px;
+      } */
+      /* .register-event-btn-title {
+        text-align: center;
+        color: white;
+        background-color: #02cb7b;
+      } */
+      /* .register-event-btn-title {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: white;
+        background-color: #02cb7b;
+      }
+      .register-event-btn-title i {
+        margin-right: 10px;
+      } */
+      /* .register-event-btn-title {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: transform 0.2s ease-in-out;
+        cursor: pointer;
+      }
+      .register-event-btn-title:hover {
+        transform: scale(1.05);
+      }
+      .register-event-btn-title i {
+        margin-right: 10px;
+      } */
+      /* .register-event-btn-title:before {
+        content: "";
+        display: block;
+        background: url("icon _clutery_.svg") no-repeat;
+        width: 20px;
+        height: 20px;
+        float: left;
+        margin: 0 6px 0 0;
+      } */
+      /* .register-event-btn {
+        display: inline-block;
+        padding: 10px 20px;
+        border: 2px solid #333;
+        border-radius: 5px;
+        text-align: center;
+        transition: transform 0.2s ease-in-out;
+        cursor: pointer;
+      }
+      .register-event-btn:hover {
+        transform: translate(0, -5px);
+        
+      }
+      .register-event-btn-title {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .register-event-btn-title:before {
+        content: "";
+        display: block;
+        background: url("icon _clutery_.svg") no-repeat;
+        width: 20px;
+        height: 20px;
+        float: left;
+        margin: 0 6px 0 0;
+      } */
+      .register-event-btn {
+        display: inline-block;
+        padding: 10px 20px;
+        border: 2px solid #02cb7b;
+        border-radius: 5px;
+        background-color: #02cb7b;
+        color: white;
+        text-align: center;
+        transition: transform 0.2s ease-in-out;
+        cursor: pointer;
+      }
+      .register-event-btn:hover {
+        transform: scale(1.05);
+      }
+      .register-event-btn-title {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .register-event-btn-title i {
+        color: white;
+        margin-right: 6px;
+      }
+      /* .club-information-outer-bg {
+        background-color: #ffffff;
+        width: 420%;
+        margin-top: 2px;
+        height: 100%;
+        border-radius: 13px;
+        margin: 0;
+        padding: 12px;
+      }
+      .club-information-inner-bg {
+        background-color: #eef1f7;
+        width: 300px;
+        margin-top: 2px;
+        border-radius: 13px;
+        margin: 0;
+        padding: 12px;
+      }
+      .card {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        padding: 10px;
+        border-radius: 5px;
+      }
+      .card-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50px;
+        height: 50px;
+        background-color: white;
+        border-radius: 13px;
+        color: white;
+        margin-right: 10px;
+      }
+      .card-icon i {
+        background-color: transparent;
+      }
+      .card-text {
+        display: flex;
+        flex-direction: column;
+      }
+      .card-text p {
+        margin: 5px 0;
+      }
+      p {
+        background-color: transparent;
+      } */
+      .club-information-outer-bg {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    background-color: #ffffff;
+    border-radius: 13px;
+    margin-top: 2px;
+    padding: 12px;
+  }
+  .club-information-inner-bg {
+    background-color: #eef1f7;
+    border-radius: 13px;
+    margin-top: 2px;
+    margin-right: 20px;
+    padding: 12px;
+    flex-basis: calc(50% - 20px);
+  }
+  .card {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  .card-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    background-color: white;
+    border-radius: 13px;
+    color: white;
+    margin-right: 10px;
+  }
+  .card-icon i {
+    background-color: transparent;
+  }
+  .card-text {
+    display: flex;
+    flex-direction: column;
+  }
+  .card-text p {
+    margin: 5px 0;
+  }
+  p {
+    background-color: transparent;
+  }
+  .club-bio {
+    border-radius: 13px;
+    margin-top: 2px;
+    margin-right: 20px;
+    padding: 12px;
+    flex-basis: calc(50% - 20px);
+  }
+  .club-bio h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+  @media (max-width: 768px) {
+    .club-information-outer-bg {
+      flex-direction: column;
+    }
+    .club-information-inner-bg, .club-bio {
+      margin-right: 0;
+      margin-bottom: 20px;
+    }
+  }
+    /* This is the member info */
+    /* NEW CSS FOR MEMBER LIST VIEW AND ADVISOR INFORMATION */
+  .member-list-outer-bg {
+    background-color: #ffffff;
+    width: 50%;
+    margin-top: 30px;
+    height: 300px;
+    border-radius: 13px;
+    margin: 0;
+    padding: 12px;
+    overflow-y: scroll;
+  }
+  .member-list-inner-bg {
+    width: 100%;
+    height: 50%;
+    border-radius: 13px;
+    margin: 0;
+    padding: 12px;
+  }
+  .member-list-card {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  .member-list-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    background-color: #eef1f7;
+    border-radius: 50%;
+    font-size: 24px;
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  .advisor-information-outer-bg {
+    background-color: #ffffff;
+    width: 50%;
+    height:100%;
+    margin-right: 20px;
+    border-radius: 13px;
+    margin-left: 20px;
+    padding: 12px;
+    overflow-y: scroll;
+  }
+
+  .advisor-information-inner-bg {
+    width: 100%;
+    border-radius: 13px;
+    margin: 0;
+    padding: 12px;
+  }
+  .advisor-information-card {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  .advisor-information-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    background-color: white;
+    border-radius: 13px;
+    color: white;
+    margin-right: 10px;
+  }
+  .advisor-information-icon i {
+    background-color: transparent;
+  }
+  
     </style>
   </head>
   <body>
@@ -193,6 +501,146 @@
         <p><strong>Event Date: </strong><span class="event-date"></span></p>
         <p><strong>Event Status: </strong><span class="event-status"></span></p>
       </div>
+    </div>
+    <div class="right-container">
+      <div class="register-event-container">
+        <button type="button" class="register-event-btn">
+          <p class="register-event-btn-title">
+            <i class="material-icons" style="background-color: transparent"
+              >event</i
+            >
+            Register Event
+          </p>
+        </div>
+      
+      
+        <div>
+          <h2 style="margin-top: 40px; margin-left: 20px; margin-bottom: 10px;" >Club Information</h2>
+          <div class="club-information-outer-bg">
+            <div class="club-information-inner-bg">
+              <div class="card">
+                <div class="card-icon">
+                  <i class="material-icons" style="color: #20BDDC">person</i>
+                </div>
+                <div class="card-text">
+                  <p>Organization Name:</p>
+                  <p>Nomad Student Organization</p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon">
+                  <i class="material-icons" style="color: #F1642D">email</i>
+                </div>
+                <div class="card-text">
+                  <p>Email:</p>
+                  <p>Nomad@Goucher.edu</p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon" style="color: #02CB7B">
+                  <i class="material-icons">phone</i>
+                </div>
+                <div class="card-text">
+                  <p>Phone:</p>
+                  <p>443-713-8434</p>
+                </div>
+              </div>
+            </div>
+            <div class="club-bio">
+              <h3>Biography</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed commodo turpis eget nulla tincidunt pretium. Fusce nec orci vel mauris ultrices sagittis vitae eu velit. Pellentesque eget lacus turpis. Aenean luctus diam risus, eu aliquam justo sollicitudin in.</p>
+            </div>
+          </div>
+        </div>
+
+        
+        <div style="display: flex; margin-top: 20px">
+        
+          <div class="member-list-outer-bg">
+           
+              <div class="member-list-card">
+                
+                <div class="member-list-icon">
+                  <p>A</p>
+                </div>
+                <div class="member-list-text">
+                  <p>President:</p>
+                  <p>John Doe</p>
+                </div>
+              </div>
+              <div class="member-list-card">
+                <div class="member-list-icon">
+                  <p>B</p>
+                </div>
+                <div class="member-list-text">
+                  <p>Vice President:</p>
+                  <p>Jane Doe</p>
+                </div>
+              </div>
+              <div class="member-list-card">
+                <div class="member-list-icon">
+                  <p>C</p>
+                </div>
+                <div class="member-list-text">
+                  <p>Treasurer:</p>
+                  <p>Bob Smith</p>
+                </div>
+              </div>
+              <div class="member-list-card">
+                <div class="member-list-icon">
+                  <p>D</p>
+                </div>
+                <div class="member-list-text">
+                  <p>Secretary:</p>
+                  <p>Emily Johnson</p>
+                </div>
+              </div>
+              <div class="member-list-card">
+                <div class="member-list-icon">
+                  <p>E</p>
+                </div>
+                <div class="member-list-text">
+                  <p>Member:</p>
+                  <p>Mike Davis</p>
+                </div>
+              
+            </div>
+          </div>
+          <div class="advisor-information-outer-bg">
+            <div class="advisor-information-inner-bg">
+              <div class="advisor-information-card">
+                <div class="advisor-information-icon">
+                  <i class="material-icons" style="color: #20BDDC">person</i>
+                </div>
+                <div class="advisor-information-text">
+                  <p>Advisor Name:</p>
+                  <p>Jane Smith</p>
+                </div>
+              </div>
+              <div class="advisor-information-card">
+                <div class="advisor-information-icon">
+                  <i class="material-icons" style="color: #F1642D">email</i>
+                </div>
+                <div class="advisor-information-text">
+                  <p>Email:</p>
+                  <p>jane.smith@example.com</p>
+                </div>
+              </div>
+              <div class="advisor-information-card">
+                <div class="advisor-information-icon" style="color: #02CB7B">
+                  <i class="material-icons">phone</i>
+                </div>
+                <div class="advisor-information-text">
+                  <p>Phone:</p>
+                  <p>443-555-1234</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+     
     </div>
 
     <script>
