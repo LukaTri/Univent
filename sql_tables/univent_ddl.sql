@@ -96,17 +96,6 @@ CREATE TABLE Registers(
                                    ON DELETE CASCADE
 );
 
-
-CREATE TABLE Ose(
-    user_id         INTEGER NOT NULL,
-    first_name      varchar(42) NOT NULL,
-    last_name       varchar(42) NOT NULL,
-    email           varchar(42) NOT NULL,
-    password        varchar(42) NOT NULL,
-
-    CONSTRAINT Ose_userid_pk PRIMARY KEY (user_id)
-);
-
 CREATE TABLE Approval(
     event_name      varchar(42) NOT NULL,
     user_id         INTEGER NOT NULL,
