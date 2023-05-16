@@ -56,7 +56,6 @@ def afterReq(response):
 
 @app.route("/", methods=["POST", "GET"])
 def login():
-    print(session)
     if request.method == "GET":
         if session["loggedIn"]:
             return redirect(url_for("success", user=session["user"]))
@@ -65,12 +64,10 @@ def login():
     else:
         user = request.form["user"]
         password = request.form["passwd"]
-        print(f"User Entered: {user}\nPassword Entered: {password}")
 
         query = "SELECT first_name, password, user_id, user_type, email FROM Users WHERE email=%(usr)s;"
         vars = {"usr": user}
         result = sqlQuery(query, vars)
-        print(result)
 
         if result != None and password == result["password"]:
             session["loggedIn"] = True
@@ -106,7 +103,6 @@ def success(user=None):
 
         for i in result:
             event_date = i['event_date']
-            print(f'event date:\t{event_date}')
 
             if isinstance(event_date, datetime.date) and event_date < present.date():
                 past_events.append(i)
@@ -159,7 +155,6 @@ def registration(user=None):
             %(secondLocationPreference)s\
         ) RETURNING event_name, event_date, primary_loc;"
         results = sqlQuery(query, kwargs)
-        print(results)
         return redirect(url_for("homepage", user=session["user"]))
 
     return render_template("eventReg.html")
@@ -216,6 +211,7 @@ def homepage(user=None):
 
         ose_result = sqlQuery(club_query, user_kwargs)
 
+        # Necessary 
         get_club_kwargs = {"":""}
         get_club_query = "SELECT event_name, event_date, primary_loc\
             FROM Event;"
@@ -228,9 +224,6 @@ def homepage(user=None):
                 past_events.append(i)
             else:
                 current_events.append(i)
-
-        print(f'Current events:\t{current_events}')
-        print(f'Past events:\t{past_events}')
 
         return render_template(
             "oseHome.html",
@@ -250,7 +243,7 @@ def homepage(user=None):
     #     member=club_result,
     # )
 
-@app.route("/register-user/", methods=["POST", "GET"])
+@app.route("/register-user/<user>/", methods=["POST", "GET"])
 def register_user(user=None):
     print("reached here")
     if request.method == "POST":
@@ -278,9 +271,12 @@ def register_user(user=None):
                 %(email)s,\
                 %(password)s,\
                 %(usertype)s\
-            );" 
-            # ) RETURNING event_name, event_date, primary_loc;"
+            ) RETURNING first_name, last_name, email,\
+                password, user_type;"
+            print("before query")
             register_result = sqlQuery(query, kwargs)
+            print("after query")
+            return redirect(url_for("homepage", user=session["user"]))
         else:
             print("ose")
 
