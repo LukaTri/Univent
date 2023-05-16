@@ -264,12 +264,12 @@
         margin: 0;
         padding: 12px;
       } */
-      /* .register-event-btn-title {
+      /* .register-user-btn-title {
         text-align: center;
         color: white;
         background-color: #02cb7b;
       } */
-      /* .register-event-btn-title {
+      /* .register-user-btn-title {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -277,23 +277,23 @@
         color: white;
         background-color: #02cb7b;
       }
-      .register-event-btn-title i {
+      .register-user-btn-title i {
         margin-right: 10px;
       } */
-      /* .register-event-btn-title {
+      /* .register-user-btn-title {
         display: flex;
         justify-content: center;
         align-items: center;
         transition: transform 0.2s ease-in-out;
         cursor: pointer;
       }
-      .register-event-btn-title:hover {
+      .register-user-btn-title:hover {
         transform: scale(1.05);
       }
-      .register-event-btn-title i {
+      .register-user-btn-title i {
         margin-right: 10px;
       } */
-      /* .register-event-btn-title:before {
+      /* .register-user-btn-title:before {
         content: "";
         display: block;
         background: url("icon _clutery_.svg") no-repeat;
@@ -302,7 +302,7 @@
         float: left;
         margin: 0 6px 0 0;
       } */
-      /* .register-event-btn {
+      /* .register-user-btn {
         display: inline-block;
         padding: 10px 20px;
         border: 2px solid #333;
@@ -311,16 +311,16 @@
         transition: transform 0.2s ease-in-out;
         cursor: pointer;
       }
-      .register-event-btn:hover {
+      .register-user-btn:hover {
         transform: translate(0, -5px);
         
       }
-      .register-event-btn-title {
+      .register-user-btn-title {
         display: flex;
         justify-content: center;
         align-items: center;
       }
-      .register-event-btn-title:before {
+      .register-user-btn-title:before {
         content: "";
         display: block;
         background: url("icon _clutery_.svg") no-repeat;
@@ -329,7 +329,7 @@
         float: left;
         margin: 0 6px 0 0;
       } */
-      .register-event-btn {
+      .register-user-btn {
         display: inline-block;
         padding: 10px 20px;
         border: 2px solid transparent;
@@ -340,7 +340,7 @@
         transition: transform 0.2s ease-in-out;
         cursor: pointer;
       }
-      .register-event-btn:hover {
+      .register-user-btn:hover {
         transform: scale(1.05);
       }
       .logout-btn {
@@ -349,6 +349,7 @@
         border: 2px solid transparent;
         border-radius: 5px;
         background-color: #02cb7b;
+        margin-left: 60%;
         color: white;
         text-align: center;
         transition: transform 0.2s ease-in-out;
@@ -357,12 +358,12 @@
       .logout-btn:hover {
         transform: scale(1.05);
       }
-      .register-event-btn-title {
+      .register-user-btn-title {
         display: flex;
         justify-content: center;
         align-items: center;
       }
-      .register-event-btn-title i {
+      .register-user-btn-title i {
         color: white;
         margin-right: 6px;
       }
@@ -620,7 +621,7 @@
       class="ongoingTitle"
       style="margin-top: 30px; color: #075536; font-weight: 400"
     >
-      👋 Hello Luka, welcome back!
+      👋 Hello {{ user }}, welcome back!
     </h3>
   </div>
   <body>
@@ -750,24 +751,25 @@
       </div>
     </div>
     <div class="right-container">
-      <div style="justify-content: end">
-        <!-- <button
+      <div style="justify-content: space-between">
+        <button
           type="button"
-          class="register-event-btn"
+          class="register-user-btn"
           onclick=""
           onClick="location.href='eventReg.html'"
         >
-          <p class="register-event-btn-title">
+          <p class="register-user-btn-title">
             <i class="material-icons" style="background-color: transparent"
               >event</i
             >
-            Register Event
+            Register user
           </p>
-        </button> -->
+        </button>
         <button
           type="button"
           class="logout-btn"
-          style="background-color: #d73737"
+          style="background-color: #d73737; "
+          onclick="location.href='{{ url_for('logout') }}'"
         >
           <p class="logout-btn-title">
             <i class="material-icons" style="background-color: transparent"
@@ -797,7 +799,8 @@
                 </div>
                 <div class="card-text">
                   <p>Email:</p>
-                  <p>Nomad@Goucher.edu</p>
+                  <a href="mailto:ose@goucher.edu">ose@goucher.edu</a>
+                  <!-- <p>ose@goucher.edu</p> -->
                 </div>
               </div>
               <div class="card">
@@ -806,7 +809,7 @@
                 </div>
                 <div class="card-text">
                   <p>Phone:</p>
-                  <p>443-713-8434</p>
+                  <p>443-337-6124</p>
                 </div>
               </div>
             </div>
@@ -879,7 +882,7 @@
                 </div>
                 <div class="advisor-information-text">
                   <p>Director Name:</p>
-                  <p>Jane Smith</p>
+                  <p>{{ user }}</p>
                 </div>
               </div>
               <div class="advisor-information-card">

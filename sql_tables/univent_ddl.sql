@@ -12,21 +12,13 @@ CREATE TABLE Club(
 
 CREATE TABLE Users(
     user_id         SERIAL NOT NULL,
-    -- club_name       varchar(42),
     first_name      varchar(42) NOT NULL,
     last_name       varchar(42) NOT NULL,
     email           varchar(42) UNIQUE NOT NULL,
-    -- phone_number    char(10),
     password        varchar(42) NOT NULL,
-    -- title           varchar(42) NOT NULL,
     user_type       INTEGER NOT NULL,
 
     CONSTRAINT Users_userid_pk PRIMARY KEY (user_id)
-    --CONSTRAINT Users_phonenumber_cc CHECK (phone_number NOT LIKE '%[^0-9]%'),
-    --CONSTRAINT Users_clubname_fk FOREIGN KEY (club_name)
-                                 --REFERENCES Club (club_name)
-                                 --ON DELETE CASCADE
-
 );
 
 CREATE TABLE Members(
@@ -57,7 +49,6 @@ BEGIN
     ) THEN
         IF NEW.club_name IS NULL THEN
             -- Trigger actions go here
-            -- Replace with the desired actions
             RAISE EXCEPTION 'User with user_id % has user_type = 1 and no associated club_name in Members table', NEW.user_id;
         END IF;
     END IF;
@@ -71,41 +62,6 @@ CREATE TRIGGER user_type_and_club_name_trigger
 AFTER INSERT OR UPDATE ON Members
 FOR EACH ROW
 EXECUTE FUNCTION check_user_type_and_club_name();
-
--- -- Create trigger function
--- CREATE OR REPLACE FUNCTION check_user_type_and_club_name()
--- RETURNS TRIGGER AS $$
--- BEGIN
---     IF NEW.user_type = 1 AND
---        (SELECT club_name FROM Members WHERE user_id = NEW.user_id) IS NULL THEN
---         RAISE EXCEPTION 'User with user_id % has user_type = 1 and no associated club_name in Members table', NEW.user_id;
---     END IF;
-    
---     RETURN NEW;
--- END;
--- $$ LANGUAGE plpgsql;
-
--- -- Create the trigger
--- CREATE TRIGGER user_type_and_club_name_trigger
--- AFTER INSERT OR UPDATE ON Members
--- FOR EACH ROW
--- EXECUTE FUNCTION check_user_type_and_club_name();
-
-
--- CREATE OR REPLACE FUNCTION enforce_club_name_not_null()
--- RETURNS TRIGGER AS $$
--- BEGIN
---   IF NEW.user_type = 1 AND NEW.club_name IS NULL THEN
---     RAISE EXCEPTION 'Club name cannot be null for users with type 1';
---   END IF;
---   RETURN NEW;
--- END;
--- $$ LANGUAGE plpgsql;
-
--- CREATE TRIGGER club_name_not_null_trigger
--- BEFORE INSERT OR UPDATE ON Members
--- FOR EACH ROW
--- EXECUTE FUNCTION enforce_club_name_not_null();
 
 CREATE TABLE Event(
     event_name      varchar(42) NOT NULL,
@@ -124,14 +80,13 @@ CREATE TABLE Event(
                                  ON DELETE CASCADE,
     CONSTRAINT Event_cost_cc CHECK (est_attendance >= 0 AND est_attendance <= 999),
     CONSTRAINT Event_estattd_cc CHECK (cost >= 0 AND cost <= 9999.99)
-    -- Add constraints for date and time later once I understand what to do.
 );
 
 CREATE TABLE Registers(
     event_name      varchar(42) NOT NULL,
     user_id         INTEGER NOT NULL,
-    space_res_form  varchar(42) NOT NULL, --Research for better desc.
-    event_res_form  varchar(42) NOT NULL, --Research for better desc.
+    space_res_form  varchar(42) NOT NULL,
+    event_res_form  varchar(42) NOT NULL,
 
     CONSTRAINT Registers_eventname_fk FOREIGN KEY (event_name)
                                       REFERENCES Event (event_name)

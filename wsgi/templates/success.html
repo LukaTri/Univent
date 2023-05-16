@@ -20,18 +20,23 @@
   {% else %}
   <p>Not a member of any club, therefore cannot register for any events.</p>
   {% endif %}
-  <p> 
-    Upcoming Events:
-  </p>
 
-  {% if not events %}
+  {% if not current_events and not past_events %}
   <p>You have no upcoming events.</p>
   {% else %}
-  {% for i in events %}
+  <h4>Upcoming Events:</h4>
+  {% for i in current_events %}
+  <p> {{ i }} </p>
+  {% endfor %}
+  <h4>Past Events:</h4>
+  {% for i in past_events %}
   <p> {{ i }} </p>
   {% endfor %}
   {% endif %}
 
+  <form action="{{ url_for('homepage', user=session['user']) }}">
+    <input type="submit" value="Home Page">
+  </form>
 
   </body>
 </html>
