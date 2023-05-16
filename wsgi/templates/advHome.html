@@ -587,6 +587,21 @@
         background-color: #9f1c1c;
         transform: translateY(1px);
       }
+      .logout-btn {
+        display: inline-block;
+        padding: 10px 20px;
+        border: 2px solid transparent;
+        border-radius: 5px;
+        background-color: #02cb7b;
+        margin-left: 60%;
+        color: white;
+        text-align: center;
+        transition: transform 0.2s ease-in-out;
+        cursor: pointer;
+      }
+      .logout-btn:hover {
+        transform: scale(1.05);
+      }
     </style>
   </head>
   <body>
@@ -717,7 +732,20 @@
             Register Event
           </p>
         </button>
-
+      </button>
+      <button
+        type="button"
+        class="logout-btn"
+        style="background-color: #d73737; "
+        onclick="location.href='{{ url_for('logout') }}'"
+      >
+        <p class="logout-btn-title">
+          <i class="material-icons" style="background-color: transparent"
+            >logout</i
+          >
+          Log Out
+        </p>
+      </button>
         <div>
           <h2 style="margin-top: 20px; margin-left: 20px; margin-bottom: 10px">
             Club Information
