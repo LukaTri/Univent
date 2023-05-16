@@ -99,8 +99,88 @@
         background-color: #04aa6d;
         cursor: pointer;
       }
-
       .event-details {
+        position: fixed;
+        top: 0;
+        right: -50%; /* Slide out to the right */
+        width: 50%;
+        height: 100%;
+        background-color: white;
+        padding: 20px;
+
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        z-index: 999;
+        transition: right 0.3s ease-in-out;
+      }
+
+      .event-details.open {
+        right: 0; /* Slide in from the right */
+      }
+
+      .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 20px;
+        cursor: pointer;
+      }
+
+      .event-info {
+        margin-top: 20px;
+        background-color: transparent;
+      }
+
+      .event-details-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        background-color: transparent;
+      }
+
+      .event-details-label {
+        width: 200px;
+        font-weight: bold;
+        background-color: transparent;
+      }
+
+      .event-name {
+        font-size: 24px;
+        margin-bottom: 10px;
+        background-color: transparent;
+      }
+
+      .event-details-row label {
+        margin-right: 10px;
+        background-color: transparent;
+      }
+
+      .event-details-row span {
+        font-weight: bold;
+        background-color: transparent;
+      }
+
+      .event-details.open {
+        right: 0; /* Slide in from the right */
+      }
+      .event-details h2 {
+        margin-bottom: 0px;
+        width: 200;
+        background-color: transparent;
+      }
+
+      .event-details p {
+        margin-bottom: 10px;
+      }
+
+      .event-details .close-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 20px;
+        cursor: pointer;
+      }
+
+      /* .event-details {
         position: fixed;
         top: 0px;
         left: 0;
@@ -127,7 +207,7 @@
         right: 20px;
         font-size: 20px;
         cursor: pointer;
-      }
+      } */
       .past-event-list {
         position: fixed;
         top: 60vh;
@@ -469,10 +549,56 @@
       .advisor-information-icon i {
         background-color: transparent;
       }
+      .approve-button,
+      .decline-button {
+        padding: 10px 20px;
+        background-color: #3b82f6;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: background-color 0.3s ease;
+      }
+
+      .approve-button:hover,
+      .decline-button:hover {
+        background-color: #2563eb;
+      }
+
+      .approve-button:active,
+      .decline-button:active {
+        background-color: #1e40af;
+        transform: translateY(1px);
+      }
+
+      .decline-button {
+        background-color: #ef4444;
+        margin-left: 30px;
+      }
+
+      .decline-button:hover {
+        background-color: #d73737;
+      }
+
+      .decline-button:active {
+        background-color: #9f1c1c;
+        transform: translateY(1px);
+      }
     </style>
   </head>
   <body>
-    <h3 class="ongoingTitle" style="margin-top: 30px">Ongoing Events</h3>
+    <div style="display: flex">
+      <h3 class="ongoingTitle" style="margin-top: 30px">Approval Waiting</h3>
+  
+      <h3
+        class="ongoingTitle"
+        style="margin-top: 30px; color: #075536; font-weight: 400"
+      >
+        👋 Hello {{ user }}, welcome back!
+      </h3>
+    </div>
     <div class="container">
       <table class="event-list">
         <thead>
@@ -501,10 +627,102 @@
 
       <div class="event-details" id="event-details">
         <span class="close-btn">&times;</span>
-        <h2></h2>
-        <p><strong>Event Name: </strong><span class="event-name"></span></p>
-        <p><strong>Event Date: </strong><span class="event-date"></span></p>
-        <p><strong>Event Status: </strong><span class="event-status"></span></p>
+        <div class="event-info">
+          <h2 class="event-name"></h2>
+          <hr
+            class="dashed"
+            style="border-top: 3px dashed #bbb; margin-top: 15px"
+          />
+
+          <div class="event-details-row" style="margin-top: 15px">
+            <label class="event-details-label">Club Name:</label>
+            <span class="club-name"></span>
+          </div>
+          <hr
+            class="dashed"
+            style="border-top: 3px dashed #bbb; margin-top: 15px"
+          />
+          <div class="event-details-row" style="margin-top: 15px">
+            <label class="event-details-label">Event Description:</label>
+            <span class="event-description"></span>
+          </div>
+
+          <hr
+            class="dashed"
+            style="border-top: 3px dashed #bbb; margin-top: 15px"
+          />
+          <div
+            class="location-row"
+            style="
+              display: flex;
+              margin-top: 15px;
+              background-color: transparent;
+            "
+          >
+            <div class="event-details-row">
+              <label class="event-details-label">Event Date:</label>
+              <span class="event-date"></span>
+            </div>
+            <div class="event-details-row">
+              <label class="event-details-label">Estimated Attendance:</label>
+              <span class="estimated-attendance"></span>
+            </div>
+          </div>
+          <hr
+            class="dashed"
+            style="border-top: 3px dashed #bbb; margin-top: 5px"
+          />
+          <div
+            class="location-row"
+            style="
+              display: flex;
+              margin-top: 15px;
+              background-color: transparent;
+            "
+          >
+            <div class="event-details-row">
+              <label class="event-details-label"
+                >First Location Preference:</label
+              >
+              <span class="first-location-preference"></span>
+            </div>
+            <div class="event-details-row">
+              <label class="event-details-label"
+                >Second Location Preference:</label
+              >
+              <span class="second-location-preference"></span>
+            </div>
+          </div>
+          <hr
+            class="dashed"
+            style="border-top: 3px dashed #bbb; margin-top: 5px"
+          />
+          <div
+            class="location-row"
+            style="
+              display: flex;
+              margin-top: 15px;
+              background-color: transparent;
+            "
+          >
+            <div class="event-details-row">
+              <label class="event-details-label">Start Time:</label>
+              <span class="start-time"></span>
+            </div>
+            <div class="event-details-row">
+              <label class="event-details-label">End Time:</label>
+              <span class="end-time"></span>
+            </div>
+          </div>
+          <hr
+            class="dashed"
+            style="border-top: 3px dashed #bbb; margin-top: 5px"
+          />
+          <div class="button-row" style="background-color: transparent">
+            <button class="approve-button">Approve Event</button>
+            <button class="decline-button">Decline Event</button>
+          </div>
+        </div>
       </div>
     </div>
     <div class="right-container">
@@ -655,15 +873,44 @@
     <script>
       const eventList = [
         // Original events
-        {% for event in current_events %}
-          { name: "{{ event[0] }}", date: "{{ event[1] }}", status: "{{ event[2] }}"},
-        {% endfor %}
-      ];
+        {
+          name: "Event 1",
+          date: "2023-05-01",
+          status: "Waiting advisor approval",
+        },
+        { name: "Event 2", date: "2023-05-02", status: "Advisor Approved" },
+        { name: "Event 3", date: "2023-05-03", status: "Waiting OSE approval" },
+        { name: "Event 4", date: "2023-05-04", status: "OSE Approved" },
+        { name: "Event 5", date: "2023-05-05", status: "OSE Approved" },
 
+        // Additional events
+        {
+          name: "Event 6",
+          date: "2023-05-06",
+          status: "Waiting advisor approval",
+        },
+        { name: "Event 7", date: "2023-05-07", status: "Advisor Approved" },
+        { name: "Event 8", date: "2023-05-08", status: "Waiting OSE approval" },
+        { name: "Event 9", date: "2023-05-09", status: "OSE Approved" },
+        { name: "Event 10", date: "2023-05-10", status: "OSE Approved" },
+        {
+          name: "Event 11",
+          date: "2023-05-11",
+          status: "Waiting advisor approval",
+        },
+        { name: "Event 12", date: "2023-05-12", status: "Advisor Approved" },
+        {
+          name: "Event 13",
+          date: "2023-05-13",
+          status: "Waiting OSE approval",
+        },
+        { name: "Event 14", date: "2023-05-14", status: "OSE Approved" },
+        { name: "Event 15", date: "2023-05-15", status: "OSE Approved" },
+      ];
       const pastEvents = [
-        {% for event in past_events %}
-          { name: "{{ event[0] }}", date: "{{ event[1] }}", status: "{{ event[2] }}"},
-        {% endfor %}
+        { name: "Past Event 1", date: "2023-04-01", status: "Approved" },
+        { name: "Past Event 2", date: "2023-04-02", status: "Approved" },
+        { name: "Past Event 3", date: "2023-04-03", status: "Approved" },
       ];
       const tableBody = document.getElementById("table-body");
       const pastEventsTableBody = document.getElementById(
@@ -721,19 +968,56 @@
         });
       }
 
+      //       function renderEventDetails(index, eventList) {
+      //         const event = eventList[index];
+      //         eventDetails.innerHTML = `
+      //     <span class="close-btn">&times;</span>
+      //     <h2>${event.name}</h2>
+      //     <p><strong>Event Name: </strong>${event.name}</p>
+      //     <p><strong>Event Date: </strong>${event.date}</p>
+      //     <p><strong>Event Status: </strong>${event.status}</p>
+
+      //   `;
+
+      //         eventDetails.style.display = "block";
+      //         document.querySelector(".close-btn").addEventListener("click", () => {
+      //           eventDetails.style.display = "none";
+      //         });
+      //       }
       function renderEventDetails(index, eventList) {
         const event = eventList[index];
-        eventDetails.innerHTML = `
-    <span class="close-btn">&times;</span>
-    <h2>${event.name}</h2>
-    <p><strong>Event Name: </strong>${event.name}</p>
-    <p><strong>Event Date: </strong>${event.date}</p>
-    <p><strong>Event Status: </strong>${event.status}</p>
-  `;
+        const eventDetails = document.getElementById("event-details");
+        const closeButton = eventDetails.querySelector(".close-btn");
+        const eventName = eventDetails.querySelector(".event-name");
+        const clubName = eventDetails.querySelector(".club-name");
+        const estimatedAttendance = eventDetails.querySelector(
+          ".estimated-attendance"
+        );
+        const eventDescription =
+          eventDetails.querySelector(".event-description");
+        const firstLocationPreference = eventDetails.querySelector(
+          ".first-location-preference"
+        );
+        const secondLocationPreference = eventDetails.querySelector(
+          ".second-location-preference"
+        );
+        const eventDate = eventDetails.querySelector(".event-date");
+        const startTime = eventDetails.querySelector(".start-time");
+        const endTime = eventDetails.querySelector(".end-time");
 
-        eventDetails.style.display = "block";
-        document.querySelector(".close-btn").addEventListener("click", () => {
-          eventDetails.style.display = "none";
+        eventName.textContent = event.name;
+        estimatedAttendance.textContent = event.estimatedAttendance;
+        eventDescription.textContent = event.eventDescription;
+        firstLocationPreference.textContent = event.firstLocationPreference;
+        secondLocationPreference.textContent = event.secondLocationPreference;
+        eventDate.textContent = event.eventDate;
+        startTime.textContent = event.startTime;
+        endTime.textContent = event.endTime;
+
+        eventDetails.classList.add("open");
+
+        closeButton.addEventListener("click", () => {
+          eventDetails.classList.remove("open");
         });
       }
 
