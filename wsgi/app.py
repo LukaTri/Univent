@@ -1,6 +1,8 @@
 from flask import Flask, render_template, session, request, redirect, url_for, g
 from psycopg2 import connect
 from psycopg2.extras import DictCursor
+import datetime
+import re
 
 app = Flask(__name__)
 app.config.from_pyfile("config.py")
@@ -65,7 +67,7 @@ def login():
         password = request.form["passwd"]
         print(f"User Entered: {user}\nPassword Entered: {password}")
 
-        query = "SELECT first_name, password, user_id, user_type FROM Users WHERE email=%(usr)s;"
+        query = "SELECT first_name, password, user_id, user_type, email FROM Users WHERE email=%(usr)s;"
         vars = {"usr": user}
         result = sqlQuery(query, vars)
         print(result)
@@ -75,23 +77,29 @@ def login():
             session["user"] = result[0]
             session["usr_id"] = result[2]
             session["user_type"] = result[3]
-            print(result[3])
-            print(type(result[3]))
+            session["email"] = result[4]
             session.modified = True
-            return redirect(url_for("success", user=session["user"]))
+
+            return redirect(url_for("homepage", user=session["user"]))
+            # if result[3] == 1:
+            #     return redirect(url_for("homepage", user=session["user"]))
+            # else:
+            #     return redirect(url_for("success", user=session["user"]))
+
         else:
             return render_template("login.html")
 
 
 @app.route("/success/<user>/", methods=["GET", "POST"])
 def success(user=None):
-    events = []
+    current_events= []
+    past_events = []
+    present = datetime.datetime.now()
     user_kwargs = {"usr_id": session["usr_id"]}
     club_query = "SELECT club_name FROM Members m, Users s\
         WHERE %(usr_id)s = m.user_id;"
 
     club_result = sqlQuery(club_query, user_kwargs)
-    print(club_result)
     if club_result != None:
         session["club_name"] = club_result[0]
 
@@ -101,13 +109,20 @@ def success(user=None):
         result = multiSqlQuery(query, kwargs)
 
         for i in result:
-            events.append(i)
+            event_date = i['event_date']
+            print(f'event date:\t{event_date}')
+
+            if isinstance(event_date, datetime.date) and event_date < present.date():
+                past_events.append(i)
+            else:
+                current_events.append(i)
 
     return render_template(
         "success.html",
         user=session["user"],
         user_type=session["user_type"],
-        events=events,
+        current_events=current_events,
+        past_events=past_events,
     )
 
 
@@ -149,9 +164,63 @@ def registration(user=None):
         ) RETURNING event_name, event_date, primary_loc;"
         results = sqlQuery(query, kwargs)
         print(results)
-        return redirect(url_for("success", user=session["user"]))
+        return redirect(url_for("homepage", user=session["user"]))
 
     return render_template("eventReg.html")
+
+
+@app.route("/homepage/<user>/", methods=["GET"])
+def homepage(user=None):
+    
+
+
+    # Need to update this to optimize db fetches.
+    if session["user_type"] == 1:
+        current_events= []
+        past_events = []
+        present = datetime.datetime.now()
+        user_kwargs = {"usr_id": session["usr_id"]}
+        club_query = "SELECT club_name, m.title, m.phone_number, s.email FROM Members m, Users s\
+            WHERE %(usr_id)s = m.user_id;"
+
+        club_result = sqlQuery(club_query, user_kwargs)
+        if club_result != None:
+            session["club_name"] = club_result[0]
+            club_result['phone_number']= re.sub(r'(\d{3})(\d{3})(\d{4})', r'\1-\2-\3', club_result['phone_number'])
+
+            kwargs = {"clubname": session["club_name"]}
+            query = "SELECT event_name, event_date, primary_loc FROM\
+                Event WHERE club_name = %(clubname)s;"
+            result = multiSqlQuery(query, kwargs)
+
+            for i in result:
+                event_date = i['event_date']
+
+                if isinstance(event_date, datetime.date) and event_date < present.date():
+                    past_events.append(i)
+                else:
+                    current_events.append(i)
+        return render_template(
+            "homePage.html",
+            user=session["user"],
+            user_type=session["user_type"],
+            current_events=current_events,
+            past_events=past_events,
+            member=club_result,
+        )
+    else:
+        return render_template(
+            "oseHome.html",
+            user=session["user"],
+            user_type=session["user_type"],
+        )
+    # return render_template(
+    #     "homePage.html",
+    #     user=session["user"],
+    #     user_type=session["user_type"],
+    #     events=events,
+    #     member=club_result,
+    # )
 
 
 if __name__ != "__main__":
