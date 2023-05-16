@@ -873,44 +873,14 @@
     <script>
       const eventList = [
         // Original events
-        {
-          name: "Event 1",
-          date: "2023-05-01",
-          status: "Waiting advisor approval",
-        },
-        { name: "Event 2", date: "2023-05-02", status: "Advisor Approved" },
-        { name: "Event 3", date: "2023-05-03", status: "Waiting OSE approval" },
-        { name: "Event 4", date: "2023-05-04", status: "OSE Approved" },
-        { name: "Event 5", date: "2023-05-05", status: "OSE Approved" },
-
-        // Additional events
-        {
-          name: "Event 6",
-          date: "2023-05-06",
-          status: "Waiting advisor approval",
-        },
-        { name: "Event 7", date: "2023-05-07", status: "Advisor Approved" },
-        { name: "Event 8", date: "2023-05-08", status: "Waiting OSE approval" },
-        { name: "Event 9", date: "2023-05-09", status: "OSE Approved" },
-        { name: "Event 10", date: "2023-05-10", status: "OSE Approved" },
-        {
-          name: "Event 11",
-          date: "2023-05-11",
-          status: "Waiting advisor approval",
-        },
-        { name: "Event 12", date: "2023-05-12", status: "Advisor Approved" },
-        {
-          name: "Event 13",
-          date: "2023-05-13",
-          status: "Waiting OSE approval",
-        },
-        { name: "Event 14", date: "2023-05-14", status: "OSE Approved" },
-        { name: "Event 15", date: "2023-05-15", status: "OSE Approved" },
+        {% for event in current_events %}
+          { name:"{{ event[0] }}", date: "{{ event[1] }}", status: "{{ event[2] }}"},
+        {% endfor %}
       ];
       const pastEvents = [
-        { name: "Past Event 1", date: "2023-04-01", status: "Approved" },
-        { name: "Past Event 2", date: "2023-04-02", status: "Approved" },
-        { name: "Past Event 3", date: "2023-04-03", status: "Approved" },
+      {% for event in past_events %}
+          { name:"{{ event[0] }}", date: "{{ event[1] }}", status: "{{ event[2] }}"},
+        {% endfor %}
       ];
       const tableBody = document.getElementById("table-body");
       const pastEventsTableBody = document.getElementById(
