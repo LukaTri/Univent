@@ -81,10 +81,6 @@ def login():
             session.modified = True
 
             return redirect(url_for("homepage", user=session["user"]))
-            # if result[3] == 1:
-            #     return redirect(url_for("homepage", user=session["user"]))
-            # else:
-            #     return redirect(url_for("success", user=session["user"]))
 
         else:
             return render_template("login.html")
@@ -171,14 +167,13 @@ def registration(user=None):
 
 @app.route("/homepage/<user>/", methods=["GET"])
 def homepage(user=None):
-    
 
-
-    # Need to update this to optimize db fetches.
+    # Logic for if a club member is logged in:
     if session["user_type"] == 1:
         current_events= []
         past_events = []
         present = datetime.datetime.now()
+
         user_kwargs = {"usr_id": session["usr_id"]}
         club_query = "SELECT club_name, m.title, m.phone_number, s.email FROM Members m, Users s\
             WHERE %(usr_id)s = m.user_id;"
@@ -208,11 +203,44 @@ def homepage(user=None):
             past_events=past_events,
             member=club_result,
         )
+
+    # Logic for if an OSE member is logged in:
     else:
+        current_events = []
+        past_events = []
+        present = datetime.datetime.now()
+
+        user_kwargs = {"usr_id": session["usr_id"]}
+        club_query = "SELECT first_name, last_name, email FROM Users\
+            WHERE %(usr_id)s = user_id;"
+
+        ose_result = sqlQuery(club_query, user_kwargs)
+
+        get_club_kwargs = {"":""}
+        get_club_query = "SELECT event_name, event_date, primary_loc\
+            FROM Event;"
+
+        get_club_result = multiSqlQuery(get_club_query, get_club_kwargs)
+
+        for i in get_club_result:
+            event_date = i["event_date"]
+            if isinstance(event_date, datetime.date) and event_date < present.date():
+                past_events.append(i)
+            else:
+                current_events.append(i)
+
+        print(f'Current events:\t{current_events}')
+        print(f'Past events:\t{past_events}')
+
         return render_template(
             "oseHome.html",
             user=session["user"],
             user_type=session["user_type"],
+            first_name=ose_result["first_name"],
+            last_name=ose_result["last_name"],
+            email=ose_result["email"],
+            current_events=current_events,
+            past_events=past_events,
         )
     # return render_template(
     #     "homePage.html",
@@ -222,6 +250,46 @@ def homepage(user=None):
     #     member=club_result,
     # )
 
+@app.route("/register-user/", methods=["POST", "GET"])
+def register_user(user=None):
+    print("reached here")
+    if request.method == "POST":
+        print("posted")
+        user_type = request.form["userType"]
+        if(user_type == "club"):
+            print("club")
+            kwargs = {
+                "firstname": request.form["firstname"],
+                "lastname": request.form["lastname"],
+                "email": request.form["email"],
+                "password": request.form["password"],
+                "clubname": request.form["clubname"],
+                "position": request.form["position"],
+                "phonenumber": request.form["phonenumber"],
+                "usertype": 1,
+            }
+
+            query = "INSERT INTO Users(\
+                first_name, last_name, email,\
+                password, user_type)\
+                VALUES(\
+                %(firstname)s,\
+                %(lastname)s,\
+                %(email)s,\
+                %(password)s,\
+                %(usertype)s\
+            );" 
+            # ) RETURNING event_name, event_date, primary_loc;"
+            register_result = sqlQuery(query, kwargs)
+        else:
+            print("ose")
+
+       
+        
+        
+
+        return redirect(url_for("homepage", user=session["user"]))
+    return render_template('clubReg.html')
 
 if __name__ != "__main__":
     application = app
