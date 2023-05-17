@@ -245,12 +245,9 @@ def homepage(user=None):
 
 @app.route("/register-user/<user>/", methods=["POST", "GET"])
 def register_user(user=None):
-    print("reached here")
     if request.method == "POST":
-        print("posted")
         user_type = request.form["userType"]
         if(user_type == "club"):
-            print("club")
             kwargs = {
                 "firstname": request.form["firstname"],
                 "lastname": request.form["lastname"],
@@ -262,7 +259,7 @@ def register_user(user=None):
                 "usertype": 1,
             }
 
-            query = "INSERT INTO Users(\
+            user_query = "INSERT INTO Users(\
                 first_name, last_name, email,\
                 password, user_type)\
                 VALUES(\
@@ -273,9 +270,28 @@ def register_user(user=None):
                 %(usertype)s\
             ) RETURNING first_name, last_name, email,\
                 password, user_type;"
-            print("before query")
-            register_result = sqlQuery(query, kwargs)
-            print("after query")
+
+            club_query = "INSERT INTO Club (club_name, email)\
+                SELECT * FROM (VALUES(%(clubname)s,\
+                                      %(email)s)) AS new_club(\
+                                        club_name,\
+                                        email)\
+                WHERE NOT EXISTS (SELECT 1 FROM Club WHERE\
+                    club_name = %(clubname)s)\
+                RETURNING club_name, email;"
+
+
+            member_query = "INSERT INTO Members(\
+                title, club_name, phone_number)\
+                VALUES(\
+                %(position)s,\
+                %(clubname)s,\
+                %(phonenumber)s\
+            ) RETURNING title, club_name, phone_number;"
+
+            register_club_result = sqlQuery(club_query, kwargs)
+            register_member_result= sqlQuery(member_query, kwargs)
+            register_user_result = sqlQuery(user_query, kwargs)
             return redirect(url_for("homepage", user=session["user"]))
         else:
             print("ose")
