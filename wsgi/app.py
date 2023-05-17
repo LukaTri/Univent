@@ -164,18 +164,22 @@ def registration(user=None):
 def homepage(user=None):
     # Logic for if a club member is logged in:
     if session["user_type"] == 1:
+        advisors = []
         current_events = []
         past_events = []
         club_members = []
         present = datetime.datetime.now()
 
         user_kwargs = {"usr_id": session["usr_id"]}
-        club_query = "SELECT club_name, m.title, m.phone_number, s.email FROM Members m, Users s\
+        club_query = "SELECT club_name, m.title, m.phone_number, u.email FROM Members m, Users u\
             WHERE %(usr_id)s = m.user_id;"
 
+        print(club_query[3])
+        print(session['usr_id'])
         club_result = sqlQuery(club_query, user_kwargs)
         if club_result != None:
             session["club_name"] = club_result[0]
+
             club_result["phone_number"] = re.sub(
                 r"(\d{3})(\d{3})(\d{4})", r"\1-\2-\3", club_result["phone_number"]
             )
@@ -214,17 +218,21 @@ def homepage(user=None):
             get_advisor_query = """
             SELECT U.first_name, U.last_name, U.email, M.phone_number
             FROM Users u
-            JOIN Members M on U.user_id = M.user_id
+            LEFT JOIN Members M on U.user_id = M.user_id
             WHERE M.title = %(advisor)s
             AND M.club_name = %(clubname)s;
             """
 
             get_advisor_result = sqlQuery(get_advisor_query, get_advisor_kwargs)
 
-            get_advisor_result["phone_number"] = re.sub(
-                r"(\d{3})(\d{3})(\d{4})", r"\1-\2-\3", get_advisor_result["phone_number"]
-            )
-
+            if get_advisor_result != None:
+                get_advisor_result["phone_number"] = re.sub(
+                    r"(\d{3})(\d{3})(\d{4})", r"\1-\2-\3", get_advisor_result["phone_number"]
+                )
+                for item in get_advisor_result:
+                    advisors.append(item)
+            
+            print(club_result['email'])
         return render_template(
             "homePage.html",
             user=session["user"],
@@ -232,8 +240,7 @@ def homepage(user=None):
             current_events=current_events,
             past_events=past_events,
             member=club_result,
-            non_advisors=get_members_result,
-            advisors=get_advisor_result,
+            advisors=advisors,
         )
 
     # Logic for if an OSE member is logged in:
