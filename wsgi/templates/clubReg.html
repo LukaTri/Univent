@@ -140,7 +140,7 @@
   <body>
     <form
       id="userRegForm"
-      action="{{ url_for('register_user') }}"
+      action="{{ url_for('register_user', user=session['user']) }}"
       method="POST"
       autocomplete="off"
     >
@@ -243,7 +243,7 @@
             <input
               placeholder="Phone Number"
               oninput="this.className = ''"
-              name="position"
+              name="phonenumber"
               style="margin-bottom: 10px"
             />
           </div>
