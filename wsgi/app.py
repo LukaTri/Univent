@@ -85,7 +85,7 @@ def login():
 
 @app.route("/success/<user>/", methods=["GET", "POST"])
 def success(user=None):
-    current_events= []
+    current_events = []
     past_events = []
     present = datetime.datetime.now()
     user_kwargs = {"usr_id": session["usr_id"]}
@@ -102,7 +102,7 @@ def success(user=None):
         result = multiSqlQuery(query, kwargs)
 
         for i in result:
-            event_date = i['event_date']
+            event_date = i["event_date"]
 
             if isinstance(event_date, datetime.date) and event_date < present.date():
                 past_events.append(i)
@@ -162,11 +162,11 @@ def registration(user=None):
 
 @app.route("/homepage/<user>/", methods=["GET"])
 def homepage(user=None):
-
     # Logic for if a club member is logged in:
     if session["user_type"] == 1:
-        current_events= []
+        current_events = []
         past_events = []
+        club_members = []
         present = datetime.datetime.now()
 
         user_kwargs = {"usr_id": session["usr_id"]}
@@ -176,7 +176,9 @@ def homepage(user=None):
         club_result = sqlQuery(club_query, user_kwargs)
         if club_result != None:
             session["club_name"] = club_result[0]
-            club_result['phone_number']= re.sub(r'(\d{3})(\d{3})(\d{4})', r'\1-\2-\3', club_result['phone_number'])
+            club_result["phone_number"] = re.sub(
+                r"(\d{3})(\d{3})(\d{4})", r"\1-\2-\3", club_result["phone_number"]
+            )
 
             kwargs = {"clubname": session["club_name"]}
             query = "SELECT event_name, event_date, primary_loc FROM\
@@ -184,12 +186,45 @@ def homepage(user=None):
             result = multiSqlQuery(query, kwargs)
 
             for i in result:
-                event_date = i['event_date']
+                event_date = i["event_date"]
 
-                if isinstance(event_date, datetime.date) and event_date < present.date():
+                if (
+                    isinstance(event_date, datetime.date)
+                    and event_date < present.date()
+                ):
                     past_events.append(i)
                 else:
                     current_events.append(i)
+
+
+            get_members_kwargs = {"clubname":session['club_name'],
+                                  "advisor":"Advisor",}
+            get_members_query = """
+            SELECT U.first_name, U.last_name, M.title
+            FROM Users U
+            JOIN Members M ON U.user_id = M.user_id
+            WHERE M.title <> %(advisor)s
+            AND M.club_name = %(clubname)s;
+            """
+
+            get_members_result = multiSqlQuery(get_members_query, get_members_kwargs)
+
+            get_advisor_kwargs = {"clubname":session['club_name'],
+                                  "advisor":"Advisor",}
+            get_advisor_query = """
+            SELECT U.first_name, U.last_name, U.email, M.phone_number
+            FROM Users u
+            JOIN Members M on U.user_id = M.user_id
+            WHERE M.title = %(advisor)s
+            AND M.club_name = %(clubname)s;
+            """
+
+            get_advisor_result = sqlQuery(get_advisor_query, get_advisor_kwargs)
+
+            get_advisor_result["phone_number"] = re.sub(
+                r"(\d{3})(\d{3})(\d{4})", r"\1-\2-\3", get_advisor_result["phone_number"]
+            )
+
         return render_template(
             "homePage.html",
             user=session["user"],
@@ -197,6 +232,8 @@ def homepage(user=None):
             current_events=current_events,
             past_events=past_events,
             member=club_result,
+            non_advisors=get_members_result,
+            advisors=get_advisor_result,
         )
 
     # Logic for if an OSE member is logged in:
@@ -211,8 +248,8 @@ def homepage(user=None):
 
         ose_result = sqlQuery(club_query, user_kwargs)
 
-        # Necessary 
-        get_club_kwargs = {"":""}
+        # Necessary dictionary argument
+        get_club_kwargs = {"": ""}
         get_club_query = "SELECT event_name, event_date, primary_loc\
             FROM Event;"
 
@@ -235,19 +272,13 @@ def homepage(user=None):
             current_events=current_events,
             past_events=past_events,
         )
-    # return render_template(
-    #     "homePage.html",
-    #     user=session["user"],
-    #     user_type=session["user_type"],
-    #     events=events,
-    #     member=club_result,
-    # )
+
 
 @app.route("/register-user/<user>/", methods=["POST", "GET"])
 def register_user(user=None):
     if request.method == "POST":
         user_type = request.form["userType"]
-        if(user_type == "club"):
+        if user_type == "club":
             kwargs = {
                 "firstname": request.form["firstname"],
                 "lastname": request.form["lastname"],
@@ -259,49 +290,62 @@ def register_user(user=None):
                 "usertype": 1,
             }
 
-            user_query = "INSERT INTO Users(\
-                first_name, last_name, email,\
-                password, user_type)\
-                VALUES(\
-                %(firstname)s,\
-                %(lastname)s,\
-                %(email)s,\
-                %(password)s,\
-                %(usertype)s\
-            ) RETURNING first_name, last_name, email,\
-                password, user_type;"
+            user_query = """
+            INSERT INTO Users(first_name, last_name, email, password, user_type)
+            VALUES(%(firstname)s,%(lastname)s,%(email)s,%(password)s,%(usertype)s)
+            RETURNING first_name, last_name, email, password, user_type;
+            """
 
-            club_query = "INSERT INTO Club (club_name, email)\
-                SELECT * FROM (VALUES(%(clubname)s,\
-                                      %(email)s)) AS new_club(\
-                                        club_name,\
-                                        email)\
-                WHERE NOT EXISTS (SELECT 1 FROM Club WHERE\
-                    club_name = %(clubname)s)\
-                RETURNING club_name, email;"
+            club_query = """
+            INSERT INTO Club (club_name, email)
+            SELECT *
+            FROM (VALUES(%(clubname)s, %(email)s))
+            AS new_club(club_name, email)
+            WHERE NOT EXISTS (SELECT 1
+                              FROM Club
+                              WHERE club_name = %(clubname)s)
+            RETURNING club_name, email;
+            """
 
+            member_query = """
+            WITH new_user AS (
+                SELECT user_id
+                FROM Users
+                WHERE email = %(email)s
+            )
 
-            member_query = "INSERT INTO Members(\
-                title, club_name, phone_number)\
-                VALUES(\
-                %(position)s,\
-                %(clubname)s,\
-                %(phonenumber)s\
-            ) RETURNING title, club_name, phone_number;"
+            INSERT INTO Members (user_id, title, club_name, phone_number)
+            SELECT user_id, %(position)s, %(clubname)s, %(phonenumber)s
+            FROM new_user
+            RETURNING user_id, title, club_name, phone_number;
+            """
 
-            register_club_result = sqlQuery(club_query, kwargs)
-            register_member_result= sqlQuery(member_query, kwargs)
             register_user_result = sqlQuery(user_query, kwargs)
+            register_club_result = sqlQuery(club_query, kwargs)
+            register_member_result = sqlQuery(member_query, kwargs)
+
             return redirect(url_for("homepage", user=session["user"]))
         else:
-            print("ose")
+            kwargs = {
+                "firstname": request.form["firstname"],
+                "lastname": request.form["lastname"],
+                "email": request.form["email"],
+                "password": request.form["password"],
+                "usertype": 0,
+            }
 
-       
-        
-        
+            user_query = """
+            INSERT INTO Users(first_name, last_name, email, password, user_type)
+            VALUES(%(firstname)s,%(lastname)s,%(email)s,%(password)s,%(usertype)s)
+            RETURNING first_name, last_name, email, password, user_type;
+            """
 
-        return redirect(url_for("homepage", user=session["user"]))
-    return render_template('clubReg.html')
+            register_user_result = sqlQuery(user_query, kwargs)
+
+            return redirect(url_for("homepage", user=session["user"]))
+
+    return render_template("clubReg.html")
+
 
 if __name__ != "__main__":
     application = app
